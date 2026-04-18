@@ -11,6 +11,7 @@ logs/
 # Data
 data/
 output/
+processed_files.txt
 
 # Env
 .env
