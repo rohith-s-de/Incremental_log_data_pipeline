@@ -49,9 +49,8 @@ incremental_log_data_pipeline/
 
 ## Airflow Orchestration
 
-- DAG runs every 5 minutes  
-- Uses BashOperator to trigger the pipeline  
-- Handles scheduling and automation  
+- Schedules the pipeline to run every 5 minutes  
+- Uses BashOperator to trigger the Spark transformation script  
 
 ---
 
