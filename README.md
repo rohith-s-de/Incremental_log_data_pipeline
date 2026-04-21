@@ -35,6 +35,7 @@ It uses PySpark for data processing and Apache Airflow for scheduling. The pipel
 
 ## Project Structure
 
+```
 incremental_log_data_pipeline/
 │── dags/
 │── scripts/
@@ -44,9 +45,7 @@ incremental_log_data_pipeline/
 │── processed_files.txt
 │── requirements.txt
 │── README.md
-
-
----
+```
 
 ## Airflow Orchestration
 
