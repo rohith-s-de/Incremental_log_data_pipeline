@@ -6,11 +6,11 @@ import logging
 
 #____________LOGGING SETUP_____________#
 
-logging.basicConfig(filename="/home/rayaan/incremental_log_data_pipeline/logs/pipeline.log",level=logging.DEBUG,format="%(asctime)s-%(levelname)s-%(message)s")
+logging.basicConfig(filename="/home/rayaan/log_data_pipeline/logs/pipeline.log",level=logging.DEBUG,format="%(asctime)s-%(levelname)s-%(message)s")
 
 #____________PATHS_______________#
-data_folder_path="/home/rayaan/incremental_log_data_pipeline/data"
-processed_file_path="/home/rayaan/incremental_log_data_pipeline/processed_files.txt"
+data_folder_path="/home/rayaan/log_data_pipeline/data"
+processed_file_path="/home/rayaan/log_data_pipeline/processed_files.txt"
 
 #____________PIPELINE_____________#
 try:
@@ -39,7 +39,8 @@ try:
         .appName("Log Data Pipeline")\
         .master("local[*]")\
         .config("spark.hadoop.fs.defaultFS","file:///")\
-        .config("spark.sql.shuffle.partitions","4")\
+        .config("spark.sql.shuffle.partitions","4") \
+        .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
         .getOrCreate()
 
     logging.info("Spark Session Created")
@@ -98,13 +99,15 @@ try:
         "error_count_per_city", ascending=False)
 
     logging.info("Aggregation completed")
+    error_count_per_day.show()
+    error_count_per_city.show()
 
     #___________WRITE______________#
     error_count_per_day.write.mode("append").partitionBy("date").parquet(
-        "file:///home/rayaan/incremental_log_data_pipeline/output/error_count_per_day")
+        "s3a://rohith-log-data-pipeline/output/error_count_per_day")
 
     error_count_per_city.write.mode("append").partitionBy("city").parquet(
-        "file:///home/rayaan/incremental_log_data_pipeline/output/error_count_per_city")
+        "s3a://rohith-log-data-pipeline/output/error_count_per_city")
 
     logging.info("Data written Successfully")
 
@@ -123,3 +126,12 @@ try:
 except Exception as e:
     logging.error(f"Pipeline Failed:{e}",exc_info=True)
     sys.exit(1)
+
+
+
+
+
+
+
+
+

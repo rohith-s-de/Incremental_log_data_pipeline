@@ -8,6 +8,8 @@ source airflow_venv/bin/activate
 
 echo "🔥 Running transform..."
 
-python scripts/transform.py
+spark-submit \
+--packages org.apache.hadoop:hadoop-aws:3.3.1 \
+scripts/transform.py
 
 echo "✅ WRAPPER FINISHED"
